@@ -1,0 +1,73 @@
+images {
+  image: "/assets/kenney/PNG/Extra/Default/button_rectangle_depth_line.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/button_rectangle_line.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/button_round_depth_line.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/button_round_line.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/button_square_depth_line.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/button_square_line.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/divider.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/divider_edges.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_arrow_down_dark.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_arrow_down_light.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_arrow_down_outline.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_arrow_up_dark.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_arrow_up_light.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_arrow_up_outline.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_play_dark.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_play_light.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_play_outline.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_repeat_dark.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_repeat_light.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/icon_repeat_outline.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/input_outline_rectangle.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/input_outline_square.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/input_rectangle.png"
+}
+images {
+  image: "/assets/kenney/PNG/Extra/Default/input_square.png"
+}
+extrude_borders: 2

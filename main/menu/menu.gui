@@ -1,0 +1,52 @@
+script: "/main/menu/menu.gui_script"
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  id: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  visible: false
+}
+nodes {
+  position {
+    x: 480.0
+    y: 333.0
+  }
+  type: TYPE_TEMPLATE
+  id: "play"
+  parent: "root"
+  inherit_alpha: true
+  template: "/main/menu/button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "play/root"
+  parent: "play"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "play/button"
+  parent: "play/root"
+  overridden_fields: 17
+  overridden_fields: 38
+  template_node_child: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  id: "play/icon"
+  parent: "play/button"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "play/text"
+  parent: "play/button"
+  template_node_child: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

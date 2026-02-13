@@ -1,0 +1,15 @@
+local button = require("starter-pack/ui/button")
+local anim = require("starter-pack/ui/anim")
+
+function init(self)
+	anim.animate("play/button", anim.FAST_D)
+	self.play_btn = button.new("play", true)
+	self.play_btn:set_textures("button_rectangle_depth_flat", "button_rectangle_depth_gradient", "button_rectangle_gradient")
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_input(self, action_id, action)
+	self.play_btn:input(action_id, action, function(status, animation)
+		print("Play button pressed, status: " .. tostring(status) .. ", animation: " .. tostring(animation))
+	end)
+end

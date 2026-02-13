@@ -1,0 +1,38 @@
+go.property("proxy_script", msg.url())
+go.property("music_script", msg.url())
+
+local function window_callback(self, event, data)
+	if event == window.WINDOW_EVENT_FOCUS_LOST then
+		msg.post(self.music_script, "pause")
+	elseif event == window.WINDOW_EVENT_FOCUS_GAINED then
+		msg.post(self.music_script, "unpause")
+	elseif event == window.WINDOW_EVENT_ICONFIED then
+		msg.post(self.music_script, "pause")
+	elseif event == window.WINDOW_EVENT_DEICONIFIED then
+		msg.post(self.music_script, "unpause")
+	end
+end
+
+function init(self)
+	window.set_listener(window_callback)
+	local scene = {
+		name = "menu",
+		proxy_script = self.proxy_script
+	}
+	-- scenes example
+	msg.post("/top#scenes", "add", scene)
+	timer.delay(2, false, function()
+		msg.post("/top#scenes", "change", { name = "menu" })
+	end)
+	timer.delay(4, false, function()
+		msg.post("/top#scenes", "unload")
+	end)
+	timer.delay(6, false, function()
+		msg.post("/top#scenes", "change_async", { name = "menu" })
+	end)
+	-- music example
+	msg.post(self.music_script, "add", { name = "test", url = msg.url("/music#test"), duration = 27 })
+	msg.post(self.music_script, "add", { name = "chill", url = msg.url("/music#chill"), duration = 8 })
+	-- msg.post(self.music_script, "play", { loop = true })
+	msg.post(self.music_script, "play")
+end

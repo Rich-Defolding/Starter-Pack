@@ -1,0 +1,60 @@
+local UNLOAD = hash("unload")
+local LOAD = hash("load")
+local LOAD_ASYNC = hash("load_async")
+local LOADED = hash("proxy_loaded")
+local LOADED_SUCCESS = hash("proxy_loaded_success")
+local UNLOADED = hash("proxy_unloaded")
+local UNLOADED_SUCCESS = hash("proxy_unloaded_success")
+local PAUSE = hash("pause")
+local UNPAUSE = hash("unpause")
+local LOAD_STATUS = hash("load_status")
+
+go.property("proxy", msg.url())
+
+function init(self)
+	self.loaded = false
+	self.loader = nil
+	self.unloader = nil
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == UNLOADED then
+		self.loaded = false
+		if self.unloader then
+			msg.post(self.unloader, UNLOADED_SUCCESS)
+			self.unloader = nil
+		end
+	elseif message_id == LOADED then
+		msg.post(sender, "init")
+		msg.post(sender, "enable")
+		msg.post(sender, "acquire_input_focus")
+		self.loaded = true
+		if self.loader then
+			msg.post(self.loader, LOADED_SUCCESS)
+			self.loader = nil
+		end
+	elseif message_id == LOAD then
+		if self.loaded then return end
+		msg.post(self.proxy, "load")
+		self.loader = sender
+	elseif message_id == LOAD_ASYNC then
+		if self.loaded then return end
+		msg.post(self.proxy, "async_load")
+		self.loader = sender
+	elseif message_id == UNLOAD then
+		if not self.loaded then return end
+		msg.post(self.proxy, "release_input_focus")
+		msg.post(self.proxy, "disable")
+		msg.post(self.proxy, "final")
+		msg.post(self.proxy, "unload")
+		self.unloader = sender
+	elseif message_id == PAUSE then
+		if not self.loaded then return end
+		msg.post(self.proxy, "set_time_step", {factor = 0, mode = 0})
+	elseif message_id == UNPAUSE then
+		if not self.loaded then return end
+		msg.post(sender, "set_time_step", {factor = 1, mode = 0})
+	elseif message_id == LOAD_STATUS then
+		msg.post(sender, LOAD_STATUS, { is_loaded = self.loaded })
+	end
+end

@@ -1,0 +1,10 @@
+local HIDDEN = hash("hidden")
+local SHOWN = hash("showm")
+
+function on_message(self, message_id, message, sender)
+	if message_id == SHOWN then
+		print("loader shown")
+	elseif message_id == HIDDEN then
+		print("loader hidden")
+	end
+end

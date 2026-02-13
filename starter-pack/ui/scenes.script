@@ -1,0 +1,82 @@
+local CHANGE = hash("change")
+local CHANGE_ASYNC = hash("change_async")
+local UNLOAD = hash("unload")
+local ADD = hash("add")
+local LOADED_SUCCESS = hash("proxy_loaded_success")
+local UNLOADED_SUCCESS = hash("proxy_unloaded_success")
+local HIDDEN = hash("hidden")
+local SHOWN = hash("showm")
+
+go.property("loader", msg.url())
+go.property("hidding_z", -2)
+
+local function hide(url, z)
+	if url == msg.url() then return end
+	local pos = go.get_position(url)
+	pos.z = z
+	go.set_position(pos, url)
+	msg.post(url, HIDDEN)
+end
+
+local function show(url, z)
+	if not url then return end
+	local pos = go.get_position(url)
+	pos.z = z
+	go.set_position(pos, url)
+	msg.post(url, SHOWN)
+end
+
+function init(self)
+	self.proxies = {}
+	self.current = nil
+	self.next = nil
+	self.orig_z = go.get_position(self.loader).z
+end
+
+function final(self)
+	for _, scene in ipairs(self.proxies) do
+		msg.post(scene.proxy_script, "unload")
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == ADD then
+		self.proxies[message.name] = message
+	elseif message_id == CHANGE then
+		if message.name == self.current then return end
+		if self.current then
+			msg.post(self.proxies[self.current].proxy_script, "unload")
+			self.next = message.name
+			show(self.loader, self.orig_z)
+		else
+			msg.post(self.proxies[message.name].proxy_script, "load")
+			self.current = message.name
+		end
+	elseif message_id == CHANGE_ASYNC then
+		if message.name == self.current then return end
+		if self.current then
+			msg.post(self.proxies[self.current].proxy_script, "unload")
+			self.next = message.name
+			show(self.loader, self.orig_z)
+		else
+			msg.post(self.proxies[message.name].proxy_script, "load_async")
+			self.current = message.name
+		end
+	elseif message_id == UNLOAD then
+		if not self.current then return end
+		msg.post(self.proxies[self.current].proxy_script, "unload")
+		show(self.loader, self.orig_z)
+	elseif message_id == LOADED_SUCCESS then
+		hide(self.loader, self.hidding_z)
+		self.next = nil
+	elseif message_id == UNLOADED_SUCCESS then
+		if self.next then
+			msg.post(self.proxies[self.next].proxy_script, "load")
+			self.current = self.next
+			self.next = nil
+		else
+			self.current = nil
+			self.next = nil
+		end
+	end
+end

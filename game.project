@@ -1,0 +1,37 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 960
+height = 640
+high_dpi = 1
+
+[android]
+input_method = HiddenInputField
+
+[physics]
+gravity_y = -1000.0
+scale = 0.01
+
+[html5]
+scale_mode = stretch
+cssfile = /builtins/manifests/web/dark_theme.css
+
+[project]
+title = Starter Pack
+developer = LazyMiB
+version = 0.1
+
+[library]
+defold_min_version = 1.12.1
+include_dirs = starter-pack
+
+[font]
+runtime_generation = 1
+
+[input]
+use_accelerometer = 0
+

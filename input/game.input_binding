@@ -1,0 +1,112 @@
+key_trigger {
+  input: KEY_W
+  action: "up"
+}
+key_trigger {
+  input: KEY_S
+  action: "down"
+}
+key_trigger {
+  input: KEY_ESC
+  action: "pause"
+}
+key_trigger {
+  input: KEY_P
+  action: "pause"
+}
+key_trigger {
+  input: KEY_E
+  action: "action"
+}
+key_trigger {
+  input: KEY_SPACE
+  action: "start"
+}
+key_trigger {
+  input: KEY_UP
+  action: "up"
+}
+key_trigger {
+  input: KEY_PAUSE
+  action: "pause"
+}
+key_trigger {
+  input: KEY_DOWN
+  action: "down"
+}
+key_trigger {
+  input: KEY_C
+  action: "action"
+}
+key_trigger {
+  input: KEY_X
+  action: "start"
+}
+key_trigger {
+  input: KEY_Z
+  action: "pause"
+}
+key_trigger {
+  input: KEY_Q
+  action: "pause"
+}
+mouse_trigger {
+  input: MOUSE_BUTTON_LEFT
+  action: "mouse_btn_left"
+}
+mouse_trigger {
+  input: MOUSE_BUTTON_1
+  action: "mouse_btn_left"
+}
+gamepad_trigger {
+  input: GAMEPAD_LPAD_LEFT
+  action: "down"
+}
+gamepad_trigger {
+  input: GAMEPAD_LPAD_UP
+  action: "up"
+}
+gamepad_trigger {
+  input: GAMEPAD_START
+  action: "start"
+}
+gamepad_trigger {
+  input: GAMEPAD_BACK
+  action: "pause"
+}
+gamepad_trigger {
+  input: GAMEPAD_RTRIGGER
+  action: "action"
+}
+gamepad_trigger {
+  input: GAMEPAD_LSTICK_DOWN
+  action: "down"
+}
+gamepad_trigger {
+  input: GAMEPAD_LSTICK_UP
+  action: "up"
+}
+gamepad_trigger {
+  input: GAMEPAD_LSTICK_LEFT
+  action: "left"
+}
+gamepad_trigger {
+  input: GAMEPAD_LSTICK_RIGHT
+  action: "right"
+}
+gamepad_trigger {
+  input: GAMEPAD_LTRIGGER
+  action: "action"
+}
+touch_trigger {
+  input: TOUCH_MULTI
+  action: "touch_multi"
+}
+text_trigger {
+  input: TEXT
+  action: "text"
+}
+text_trigger {
+  input: MARKED_TEXT
+  action: "marked_text"
+}

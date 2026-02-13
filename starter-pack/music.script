@@ -1,0 +1,159 @@
+local ADD = hash("add")
+local PLAY = hash("play")
+local STOP = hash("stop")
+local PAUSE = hash("pause")
+local UNPAUSE = hash("unpause")
+local CHANGE = hash("change")
+local SET_GAIN = hash("set_gain")
+local RESTART_TIMER = hash("restart_timer")
+
+local util = require("starter-pack/util")
+
+go.property("default", 1)
+go.property("pause", 0.0)
+go.property("gain", 1.0)
+go.property("fade_in", 1.0)
+go.property("fade_out", 1.0)
+go.property("timer_delay", 0.01)
+
+local function get_index(self, name)
+	for i, track in ipairs(self.tracks) do
+		if track.name == name then
+			return i
+		end
+	end
+	return nil
+end
+
+local function play(self)
+	self.start_time = socket.gettime()
+	local gain = self.fade_in > 0 and 0 or self.gain
+	sound.play(self.tracks[self.current].url, { gain = gain }, function()
+		if not self.loop or not self.play then return end
+		play(self)
+	end)
+end
+
+local function stop(self)
+	sound.stop(self.tracks[self.current].url)
+end
+
+local function play_next(self)
+	if not self.current then return end
+	stop(self)
+	self.current = self.current + 1
+	local length = util.table_length(self.tracks)
+	if self.current > length then
+		self.current = 1
+	end
+	play(self)
+end
+
+local function timer_handler(self)
+	if not self.current or not self.play then return end
+	local playtime = socket.gettime() - self.start_time
+	local duration = self.tracks[self.current].duration
+	if self.fade_in > 0 then
+		if playtime < self.fade_in then
+			local gain = 1.0 / self.fade_in * playtime
+			if gain > 1.0 or gain < 0 then
+				gain = 1.0
+			end
+			sound.set_gain(self.tracks[self.current].url, gain)
+			self.fade_in_gain = gain
+		elseif self.fade_in_gain > 0 then
+			sound.set_gain(self.tracks[self.current].url, 1.0)
+			self.fade_in_gain = 0
+		end
+	end
+	if self.fade_out > 0 then
+		if playtime >= duration - self.fade_out then
+			local gain = 1 / self.fade_out * (duration - playtime)
+			if gain < 0 or gain > 1 then
+				gain = 0
+			end
+			sound.set_gain(self.tracks[self.current].url, gain)
+		end
+	end
+	if not self.loop then
+		if playtime > duration + self.pause then
+			play_next(self)
+		end
+	end
+end
+
+function init(self)
+	self.current = nil
+	self.start_time = 0
+	self.pause_time = 0
+	self.tracks = {}
+	self.loop = false
+	self.play = false
+	self.fade_in_gain = 0
+	self.timer = nil
+	if self.timer_delay > 0 then
+		self.timer = timer.delay(self.timer_delay, true, function() timer_handler(self) end)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == SET_GAIN then
+		self.gain = message.gain
+		if self.current then
+			sound.set_gain(self.tracks[self.current].url, self.gain)
+		end
+	elseif message_id == ADD then
+		table.insert(self.tracks, message)
+		if not self.current then
+			self.current = 1
+		end
+	elseif message_id == PLAY then
+		if not self.current then return end
+		if message.name then
+			local index = get_index(self, message.name)
+			if index then
+				self.current = index
+			end
+		end
+		if message.loop ~= nil then
+			self.loop = message.loop
+		end
+		self.play = true
+		play(self)
+	elseif message_id == STOP then
+		if not self.current then return end
+		self.loop = false
+		self.play = false
+		stop(self)
+	elseif message_id == PAUSE then
+		if not self.current or not self.play then return end
+		self.play = false
+		self.pause_time = socket.gettime()
+		sound.pause(self.tracks[self.current].url, true)
+	elseif message_id == UNPAUSE then
+		if not self.current or self.play then return end
+		self.play = true
+		self.start_time = self.start_time + (socket.gettime() - self.pause_time)
+		self.pause_time = 0
+		sound.pause(self.tracks[self.current].url, false)
+	elseif message_id == CHANGE then
+		if not self.current then return end
+		local index = get_index(self, message.name)
+		if index == self.current then return end
+		self.loop = false
+		stop(self)
+		self.current = index
+		if message.loop ~= nil then
+			self.loop = message.loop
+		end
+		self.play = true
+		play(self)
+	elseif message_id == RESTART_TIMER then
+		if self.timer then
+			timer.cancel(self.timer)
+		end
+		if self.timer_delay > 0 then
+			self.timer = timer.delay(self.timer_delay, true, function() timer_handler(self) end)
+		end
+	end
+end
