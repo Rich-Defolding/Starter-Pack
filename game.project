@@ -23,7 +23,7 @@ cssfile = /builtins/manifests/web/dark_theme.css
 [project]
 title = Starter Pack
 developer = LazyMiB
-version = 0.11
+version = 0.12
 
 [library]
 defold_min_version = 1.12.1

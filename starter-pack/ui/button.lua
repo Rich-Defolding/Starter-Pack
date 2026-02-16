@@ -71,6 +71,7 @@ function M:_handle_unpick(handler)
 	self.hover = false
 	self:_set_texture(self.textures.normal, self.textures.checked, self.textures.unchecked)
 	if self.active then
+	    self.active = false
 		handler(RELEASED, NORMAL)
 	else
 		handler(nil, NORMAL)
