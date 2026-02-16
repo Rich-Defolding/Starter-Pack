@@ -52,15 +52,14 @@ function M:input(action_id, action, handler)
 end
 
 function M:_handle_press(handler, pressed, released)
-	if pressed then
-		if not self.active then
-			self:_set_texture(self.textures.active, self.textures.checked_active, self.textures.unchecked_active)
-		end
+	if pressed and not self.active then
+		self:_set_texture(self.textures.active, self.textures.checked_active, self.textures.unchecked_active)
 		self.active = true
 		handler(PRESSED, ACTIVE)
 	elseif released then
 		if self.active then
 			self.active = false
+			self.pressed = false
 			self:_set_texture(self.textures.hover, self.textures.checked_hover, self.textures.unchecked_hover)
 			handler(RELEASED, HOVER)
 		end
