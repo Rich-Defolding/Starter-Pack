@@ -41,7 +41,7 @@ function M:_set_texture(button, checked, unchecked)
 end
 
 function M:input(action_id, action, handler)
-	if not action.touch and (not action.x or not action.y) then return end
+	if not self.is_enabled or not action.touch and (not action.x or not action.y) then return end
 	if action_id == TOUCH_MULTI then
 		self:_multi_touch_input(action_id, action, handler)
 	else
@@ -79,7 +79,6 @@ function M:_handle_unpick(handler)
 end
 
 function M:_multi_touch_input(action_id, action, handler)
-	if not self.is_enabled then return end
 	local node = gui.get_node(self.id .. "/button")
 	for touch_id, touch in ipairs(action.touch) do
 		if gui.pick_node(node, touch.x, touch.y) then
@@ -100,7 +99,6 @@ function M:_multi_touch_input(action_id, action, handler)
 end
 
 function M:_single_touch_input(action_id, action, handler)
-	if not self.is_enabled then return end
 	local node = gui.get_node(self.id .. "/button")
 	if gui.pick_node(node, action.x, action.y) then
 		if action_id == MOUSE_BTN_LEFT then
@@ -159,6 +157,9 @@ end
 
 function M:set_enabled(is_enabled)
 	self.is_enabled = is_enabled
+	self.hover = false
+	self.active = false
+	self.touch_id = nil
 	self:update()
 end
 
